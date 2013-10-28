@@ -1,6 +1,6 @@
 {
   "name": "mini_reverse_proxy",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "curl -X GET /foo/proxy?url=X",
   "author": "Aldo Bucchi <aldo.bucchi@gmail.com>",
   "main": "lib/index",
