@@ -5,11 +5,13 @@ http_module  = require 'http'
 https_module = require 'https'
 
 
-module.exports = setup_proxy = ( {app, whitelist, mount} ) ->
+module.exports = setup_proxy = ( {app, whitelist, mount, headers} ) ->
+
+  console.log 'mini reverse proxy 2!!!'
   
   mount ?= '/proxy'
 
-  host_is_allowed = ( host ) -> if whiltelist? then host in whitelist else yes
+  host_is_allowed = ( host ) -> if whitelist? then host in whitelist else yes
 
   app.all mount, ( req, res ) ->
     url    = req.query.url
@@ -31,7 +33,7 @@ module.exports = setup_proxy = ( {app, whitelist, mount} ) ->
       return res.send 404, 'Host ' + parsed.host + ' not allowed'
 
     parsed.method  = req.method
-    parsed.headers = _.extend req.headers, { host: parsed.hostname }
+    parsed.headers = _.extend req.headers, { host: parsed.hostname }, ( headers or {} )
     parsed.url     = url
 
     http_ = switch parsed.protocol
@@ -43,5 +45,3 @@ module.exports = setup_proxy = ( {app, whitelist, mount} ) ->
       res.writeHead pres.statusCode, pres.headers
     
     req.pipe proxy_request
-
-
